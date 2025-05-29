@@ -1,19 +1,10 @@
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
-<a id="readme-top"></a>
 
-<!-- PROJECT SHIELDS -->
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![Unlicense License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
 
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
   <a href="https://github.com/your_username/RAT">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    ">
   </a>
 
   <h3 align="center">RAT (Remote Access Tool)</h3>
@@ -224,9 +215,7 @@ Distributed under the Unlicense License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.com
-
-Project Link: [https://github.com/your_username/RAT](https://github.com/your_username/RAT)
+Max 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -260,5 +249,4 @@ Use this space to list resources you find helpful and would like to give credit 
 [license-url]: https://github.com/your_username/RAT/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/your_username
-[product-screenshot]: images/screenshot.png #   R A T T  
- 
+[product-screenshot]: images/screenshot.png 
